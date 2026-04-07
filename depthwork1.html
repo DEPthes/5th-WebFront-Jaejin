@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>depthwork1</title>
+  <style>
+    /* 전체 요소 기본 여백·크기 초기화 */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* 페이지 전체 레이아웃: 가운데 정렬 */
+    body {
+      background: white;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 콘텐츠 최대 너비 컨테이너 */
+    .page {
+      width: 400px;
+      min-height: 100vh;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── 1. 상단 라벨 ── */
+    .top-label {
+      font-size: 13px;
+      color: white;
+    }
+
+    /* ── 2. 헤더 배너 ── */
+    .header-banner {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #A8B9E0;
+    }
+    .header-banner .title { font-size: 18px; }
+    .header-banner .brand { font-size: 14px; }
+
+    /* ── 3. 메인 배너 이미지 ── */
+    .banner {
+      overflow: hidden;
+      aspect-ratio: 16 / 9; /* 16:9 비율 유지 */
+      background: #A8B9E0;  /* 이미지 로드 전 배경색 */
+    }
+    .banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── 4. 공지사항 버튼 ── */
+    .notice-btn {
+      border-radius: 8px;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #A8B9E0;
+      cursor: pointer;
+    }
+    .notice-btn span { font-size: 13px; }
+
+    /* ── 5. 포스터 카드 ── */
+    .poster-card {
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+    }
+    .poster-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── 6. DAY 박스 ── */
+    .day-box {
+      border-radius: 12px;
+      padding: 20px;
+      background: #A8B9E0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .day-box hr {
+      width: 100%;
+      border: none;
+      border-top: 1px solid white; /* 구분선 */
+    }
+    .day-box .day-label { font-size: 12px; color: white; }
+    .day-box .day-song  { font-size: 20px; font-weight: 700; }
+
+    /* ── 7. 푸터 ── */
+    footer {
+      padding: 24px 20px;
+      background: #A8B9E0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    /* 푸터 브랜드명 */
+    footer .footer-brand { font-size: 16px; color: #FEF5A2; }
+
+    /* SNS 아이콘 가로 나열 */
+    footer .social-icons {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* 푸터 구분선 */
+    footer hr {
+      width: 100%;
+      border: none;
+      border-top: 1px solid #FEF5A2;
+    }
+
+    /* 저작권 텍스트 */
+    footer .copyright {
+      font-size: 10px;
+      color: white;
+      text-align: center;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ── 1. 상단 라벨: 과제 주차 표시 ── -->
+    <div class="top-label">1주차 스터디 과제</div>
+
+    <!-- ── 2. 헤더 배너: 로고 + 브랜드명 ── -->
+    <div class="header-banner">
+      <img src="천진낭만.svg" alt="천진낭만 이미지">
+      <img src="headbaaner.svg" alt="헤드배너 이미지">
+    </div>
+
+    <!-- ── 3. 메인 배너 이미지 ── -->
+    <div class="banner">
+      <img src="Banner.png" alt="배너 이미지">
+    </div>
+
+    <!-- ── 4. 공지사항 버튼: 클릭 시 공지 페이지로 이동 ── -->
+    <div class="notice-btn">
+      <img src="공지사항.svg" alt="공지사항">
+      <img src="화살표.svg" alt="화살표">
+    </div>
+
+    <!-- ── 5. 포스터 카드: 아티스트 이미지 ── -->
+    <div class="poster-card">
+      <img src="wor1.png" alt="볼빨간사춘기">
+    </div>
+
+    <!-- ── 6. DAY 박스: 오늘의 곡 정보 ── -->
+    <div class="day-box">
+      <div class="day-label">DAY 2</div>
+      <hr />
+      <div class="day-song">
+        <img src="볼빨간사춘기.svg" alt="볼빨간사춘기 한글">
+      </div>
+    </div>
+
+    <!-- ── 7. 푸터: 브랜드·SNS·저작권 ── -->
+    <footer>
+      <!-- 브랜드명 -->
+      <div class="footer-brand">DEPth</div>
+
+      <!-- SNS 링크 아이콘 -->
+      <div class="social-icons">
+        <a href="#"><img src="Square.svg" alt="링크"></a>
+        <a href="#"><img src="Square(1).svg" alt="깃허브"></a>
+        <a href="#"><img src="Square(2).svg" alt="인스타그램"></a>
+        <a href="#"><img src="Square(3).svg" alt="이메일"></a>
+      </div>
+
+      <hr />
+
+      <!-- 저작권 표기 -->
+      <div class="copyright">
+        Copyright © DEPth MJU.<br/>All Rights Reserved
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
