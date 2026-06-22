@@ -263,3 +263,4 @@ btnRandom.addEventListener('click', function() {
 // 초기 실행 — 페이지 로드 시 랜덤 포켓몬 표시
 // ============================================================
 fetchRandomPokemon();
+
