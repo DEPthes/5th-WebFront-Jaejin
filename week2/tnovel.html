@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tnovel - 로그인</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background-color: #f0f0f0;
+      min-height: 100vh;
+
+      /* 전체 페이지: flex로 중앙 정렬 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* =============================================
+       핸드폰 grid (로그인)
+       ============================================= */
+    .wrapper {
+      display: grid;
+      grid-template-columns: 400px 370px;
+      gap: 40px;
+      align-items: center;
+      padding: 40px;
+    }
+
+    /* =============================================
+       핸드폰
+       ============================================= */
+    .phones {
+      position: relative;
+      width: 400px;
+      height: 600px;
+    }
+
+    .phone {
+      position: absolute;
+    }
+
+    /* 뒤쪽: 피드 폰 (왼쪽, 뒤) */
+    .phone-back {
+      width: 210px;
+      height: 450px;
+      top: 30px;
+      left: 10px;
+      z-index: 1;
+    }
+
+    /* 앞쪽: 스플래시 폰 (오른쪽, 앞) */
+    .phone-front {
+      width: 250px;
+      height: 520px;
+      top: 60px;
+      left: 130px;
+      z-index: 2;
+    }
+
+    /* =============================================
+       오른쪽: 로그인 영역
+       grid (로그인박스 / 회원가입 / 앱다운로드)
+       ============================================= */
+    .login-container {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 12px;
+    }
+
+    /* 로그인 박스: flex 세로 */
+    .login-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 36px 40px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 인풋 그룹: flex 가로 (아이콘 + 입력창) */
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      padding: 10px 16px;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .input-group:focus-within {
+      border-color: #4ab3e8;
+    }
+
+    .input-group input {
+      border: none;
+      outline: none;
+      font-size: 0.85rem;
+      color: #333;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .input-group input::placeholder { color: #aaa; }
+
+    .btn-login {
+      padding: 12px;
+      background-color: #a8d8f0;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-login:hover { background-color: #7bc4e8; }
+
+    .divider {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.85rem;
+    }
+
+    /* 카카오 버튼: flex 가로 중앙 */
+    .btn-kakao {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      background-color: #FEE500;
+      color: #3c1e1e;
+      border: none;
+      border-radius: 24px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-kakao:hover { background-color: #e6cf00; }
+
+    .forgot-password {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #555;
+    }
+
+    /* 회원가입 박스 */
+    .signup-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 16px 40px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .signup-box a {
+      color: #4ab3e8;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .signup-box a:hover { text-decoration: underline; }
+
+    /* 앱 다운로드: flex 세로 */
+    .app-download {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-download p {
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    /* 스토어 버튼: flex 가로 */
+    .store-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ===== 왼쪽: 폰 목업 ===== -->
+  <div class="phones">
+
+    <!-- 뒤쪽 폰 -->
+    <img src="images/phone2.svg" alt="phone2" class="phone phone-back">
+
+    <!-- 앞쪽 폰 -->
+    <img src="images/phone1.svg" alt="phone1" class="phone phone-front">
+
+  </div>
+
+  <!-- ===== 오른쪽: 로그인 ===== -->
+  <div class="login-container">
+
+    <div class="login-box">
+      <img src="images/mainlogo.svg" alt="Tnovel" style="display:block; margin: 0 auto 10px; height: 60px;">
+
+      <div class="input-group">
+        <img src="images/mail.svg" alt="mail" style="height: 18px; flex-shrink: 0;">
+        <input type="text" placeholder="전화번호, 사용자 이름 또는 이메일">
+      </div>
+
+      <div class="input-group">
+        <img src="images/lock.svg" alt="lock" style="height: 18px; flex-shrink: 0;">
+        <input type="password" placeholder="비밀번호">
+      </div>
+
+      <button class="btn-login">로그인</button>
+
+      <div class="divider">or</div>
+
+      <button class="btn-kakao">
+        <img src="images/카카오톡.svg" alt="카카오톡" style="height: 20px;"> 카카오 로그인
+      </button>
+
+      <div class="forgot-password">비밀번호를 잊으셨나요?</div>
+    </div>
+
+    <div class="signup-box">
+      계정이 없으신가요? <a href="#">가입하기</a>
+    </div>
+
+    <div class="app-download">
+      <p>앱을 다운로드 하세요.</p>
+      <div class="store-buttons">
+        <a href="#"><img src="images/playstore.svg" alt="Google Play"></a>
+        <a href="#"><img src="images/appstore.svg" alt="App Store"></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

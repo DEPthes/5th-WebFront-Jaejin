@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>포켓몬 도감</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #fff;
+    }
+
+    /* ── 헤더 ── */
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #f5c518, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    /* ── 검색 영역 ── */
+    .search-box {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 16px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid #2a2a4a;
+      border-radius: 14px;
+      background: #16213e;
+      color: #fff;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input::placeholder { color: #555; }
+    .search-box input:focus { border-color: #f5c518; }
+
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .btn:active { transform: scale(0.95); }
+
+    .btn-search {
+      background: linear-gradient(135deg, #f5c518, #f39c12);
+      color: #1a1a2e;
+    }
+
+    .btn-search:hover { opacity: 0.9; }
+
+    .btn-random {
+      background: #2a2a4a;
+      color: #aaa;
+      border: 2px solid #3a3a5a;
+    }
+
+    .btn-random:hover { background: #3a3a5a; color: #fff; }
+
+    /* ── 에러 메시지 ── */
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      min-height: 20px;
+    }
+
+    /* ── 포켓몬 카드 ── */
+    .card {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 24px;
+      padding: 32px 28px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.4s ease;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .card.visible { display: flex; }
+
+    /* 포켓몬 번호 */
+    .poke-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0.6;
+      letter-spacing: 2px;
+      align-self: flex-start;
+    }
+
+    /* 포켓몬 이미지 */
+    .poke-img-wrap {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 8px 0 16px;
+    }
+
+    .poke-img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* 포켓몬 이름 */
+    .poke-name {
+      font-size: 2rem;
+      font-weight: 800;
+      text-transform: capitalize;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    /* 타입 뱃지 */
+    .types {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .type-badge {
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    /* 기본 정보 */
+    .info-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 구분선 */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 20px;
+    }
+
+    /* 스탯 */
+    .stats { width: 100%; }
+
+    .stats-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.6;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .stat-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+      width: 70px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    .stat-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      width: 32px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    .stat-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .stat-bar {
+      height: 100%;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.85);
+      transition: width 0.6s ease;
+      width: 0;
+    }
+
+    /* ── 로딩 스피너 ── */
+    .loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .loading.visible { display: flex; }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #2a2a4a;
+      border-top-color: #f5c518;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔴 포켓몬 도감</h1>
+  <p class="subtitle">이름 또는 번호로 검색하세요 · powered by PokéAPI</p>
+
+  <!-- 검색 영역 -->
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="예: pikachu, 25, bulbasaur">
+    <button class="btn btn-search" id="btn-search">검색</button>
+    <button class="btn btn-random" id="btn-random">🎲 랜덤</button>
+  </div>
+
+  <!-- 에러 메시지 -->
+  <p class="error-msg" id="error-msg"></p>
+
+  <!-- 로딩 -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <span>포켓몬 불러오는 중...</span>
+  </div>
+
+  <!-- 포켓몬 카드 -->
+  <div class="card" id="card">
+    <span class="poke-number" id="poke-number"></span>
+    <div class="poke-img-wrap">
+      <img class="poke-img" id="poke-img" src="" alt="">
+    </div>
+    <h2 class="poke-name" id="poke-name"></h2>
+    <div class="types" id="poke-types"></div>
+    <div class="info-row">
+      <div class="info-item">
+        <div class="info-label">키</div>
+        <div class="info-value" id="poke-height"></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">몸무게</div>
+        <div class="info-value" id="poke-weight"></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">기본 경험치</div>
+        <div class="info-value" id="poke-exp"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="stats">
+      <div class="stats-title">기본 스탯</div>
+      <div id="poke-stats"></div>
+    </div>
+  </div>
+
+  <script src="pokemon.js"></script>
+
+</body>
+</html>

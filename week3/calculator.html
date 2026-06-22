@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>계산기</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .calculator {
+      background: #1e1e2e;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5),
+                  0 0 0 1px rgba(255,255,255,0.05);
+      width: 320px;
+    }
+
+    .display {
+      background: #13131f;
+      border-radius: 16px;
+      padding: 20px 20px 12px;
+      margin-bottom: 20px;
+      text-align: right;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .expression {
+      font-size: 14px;
+      color: #555577;
+      min-height: 20px;
+      margin-bottom: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .result {
+      font-size: 40px;
+      font-weight: 300;
+      color: #e2e2f0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      letter-spacing: -1px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      font-size: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      height: 68px;
+      transition: all 0.12s ease;
+      outline: none;
+    }
+
+    button:active {
+      transform: scale(0.93);
+    }
+
+    .btn-num {
+      background: #2a2a3e;
+      color: #e2e2f0;
+      box-shadow: 0 4px 0 #1a1a2a;
+    }
+
+    .btn-num:hover { background: #33334a; }
+
+    .btn-op {
+      background: #3d2e6b;
+      color: #c4b5fd;
+      box-shadow: 0 4px 0 #261d46;
+    }
+
+    .btn-op:hover  { background: #4a3880; }
+    .btn-op.active { background: #7c3aed; color: #fff; }
+
+    .btn-eq {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      box-shadow: 0 4px 0 #5b21b6;
+      font-size: 24px;
+    }
+
+    .btn-eq:hover { background: linear-gradient(135deg, #8b5cf6, #c084fc); }
+
+    .btn-clear {
+      background: #3a1f1f;
+      color: #f87171;
+      box-shadow: 0 4px 0 #2a1515;
+    }
+
+    .btn-clear:hover { background: #4a2828; }
+
+    .btn-sign {
+      background: #1f2a3a;
+      color: #7dd3fc;
+      box-shadow: 0 4px 0 #151f2a;
+    }
+
+    .btn-sign:hover { background: #283a4a; }
+
+    .btn-dot {
+      background: #2a2a3e;
+      color: #a5b4fc;
+      box-shadow: 0 4px 0 #1a1a2a;
+    }
+
+    .btn-dot:hover { background: #33334a; }
+
+    .btn-zero {
+      grid-column: span 2;
+      text-align: left;
+      padding-left: 26px;
+    }
+
+    .result.error {
+      font-size: 22px;
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <div class="display">
+    <div class="expression" id="expression"></div>
+    <div class="result" id="result">0</div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-clear" data-type="clear">AC</button>
+    <button class="btn-sign"  data-type="sign">+/−</button>
+    <button class="btn-op"    data-type="operator" data-value="%">%</button>
+    <button class="btn-op"    data-type="operator" data-value="/">÷</button>
+
+    <button class="btn-num" data-type="number" data-value="7">7</button>
+    <button class="btn-num" data-type="number" data-value="8">8</button>
+    <button class="btn-num" data-type="number" data-value="9">9</button>
+    <button class="btn-op"  data-type="operator" data-value="*">×</button>
+
+    <button class="btn-num" data-type="number" data-value="4">4</button>
+    <button class="btn-num" data-type="number" data-value="5">5</button>
+    <button class="btn-num" data-type="number" data-value="6">6</button>
+    <button class="btn-op"  data-type="operator" data-value="-">−</button>
+
+    <button class="btn-num" data-type="number" data-value="1">1</button>
+    <button class="btn-num" data-type="number" data-value="2">2</button>
+    <button class="btn-num" data-type="number" data-value="3">3</button>
+    <button class="btn-op"  data-type="operator" data-value="+">+</button>
+
+    <button class="btn-num btn-zero" data-type="number" data-value="0">0</button>
+    <button class="btn-dot" data-type="dot">.</button>
+    <button class="btn-eq"  data-type="equal">=</button>
+  </div>
+</div>
+
+<script>
+  // ── 전역 상태 변수 ─────────────────────────────────────
+  var currentInput = "0";   // 현재 입력 중인 숫자 (문자열)
+  var prevInput    = "";    // 이전 숫자 (문자열)
+  var operator     = null;  // 현재 연산자
+  var shouldReset  = false; // 다음 숫자 입력 시 currentInput 초기화 여부
+
+  // ── DOM 요소 선택 (document.querySelector) ────────────
+  var resultEl     = document.querySelector("#result");
+  var expressionEl = document.querySelector("#expression");
+  var allButtons   = document.querySelectorAll("button");
+
+  // ── 화면 업데이트 함수 ────────────────────────────────
+  function updateDisplay(value) {
+    resultEl.classList.remove("error");
+    var len = String(value).length;
+    if (len > 12) {
+      resultEl.style.fontSize = "22px";
+    } else if (len > 9) {
+      resultEl.style.fontSize = "30px";
+    } else {
+      resultEl.style.fontSize = "40px";
+    }
+    resultEl.textContent = value;   // textContent로 화면 값 바꾸기
+  }
+
+  // ── AC / C 버튼 텍스트 전환 함수 ─────────────────────
+  function updateClearButton() {
+    var clearBtn = document.querySelector("[data-type='clear']");
+    if (currentInput !== "0") {
+      clearBtn.textContent = "C";
+    } else {
+      clearBtn.textContent = "AC";
+    }
+  }
+
+  // ── 숫자 입력 함수 ────────────────────────────────────
+  function inputNumber(num) {
+    if (shouldReset) {
+      currentInput = num;       // 문자열로 받음
+      shouldReset = false;
+    } else {
+      if (currentInput === "0") {
+        currentInput = num;
+      } else {
+        currentInput = currentInput + num;  // 문자열 이어붙이기
+      }
+    }
+    updateDisplay(currentInput);
+    updateClearButton();
+  }
+
+  // ── 소수점 입력 함수 ──────────────────────────────────
+  function inputDot() {
+    if (shouldReset) {
+      currentInput = "0.";
+      shouldReset = false;
+    } else if (currentInput.indexOf(".") === -1) {
+      currentInput = currentInput + ".";
+    }
+    updateDisplay(currentInput);
+  }
+
+  // ── 연산자 기호 변환 함수 ─────────────────────────────
+  function getOpSymbol(op) {
+    if (op === "+") { return "+"; }
+    else if (op === "-") { return "−"; }
+    else if (op === "*") { return "×"; }
+    else if (op === "/") { return "÷"; }
+    else if (op === "%") { return "%"; }
+    else { return op; }
+  }
+
+  // ── 연산자 입력 함수 ──────────────────────────────────
+  function inputOperator(op) {
+    // 연산자가 있고 두 번째 숫자를 안 눌렀으면 연산자만 교체
+    if (operator && shouldReset) {
+      operator = op;
+      expressionEl.textContent = prevInput + " " + getOpSymbol(op);
+      highlightOperator(op);
+      return;
+    }
+
+    // 이전 연산이 있으면 먼저 계산
+    if (prevInput !== "" && !shouldReset) {
+      calculate(true);
+    } else {
+      prevInput = currentInput;
+    }
+
+    operator    = op;
+    shouldReset = true;
+    expressionEl.textContent = prevInput + " " + getOpSymbol(op);
+    highlightOperator(op);
+  }
+
+  // ── 계산 함수 (매개변수, return 활용) ─────────────────
+  function computeResult(a, b, op) {
+    // parseFloat()으로 문자열 → 숫자 변환
+    var numA = parseFloat(a);
+    var numB = parseFloat(b);
+    var result;
+
+    if (op === "+") {
+      result = numA + numB;
+    } else if (op === "-") {
+      result = numA - numB;
+    } else if (op === "*") {
+      result = numA * numB;
+    } else if (op === "/") {
+      result = numA / numB;
+    } else if (op === "%") {
+      result = numA % numB;
+    }
+
+    // 부동소수점 오차 처리
+    return parseFloat(result.toFixed(10));
+  }
+
+  // ── = 버튼 처리 함수 ──────────────────────────────────
+  function calculate(chained) {
+    if (operator === null || prevInput === "") { return; }
+
+    // 0으로 나누기 예외 처리
+    if (operator === "/" && parseFloat(currentInput) === 0) {
+      showError("0으로 나눌 수 없어요");
+      return;
+    }
+
+    var result = computeResult(prevInput, currentInput, operator);
+
+    if (!chained) {
+      expressionEl.textContent =
+        prevInput + " " + getOpSymbol(operator) + " " + currentInput + " =";
+      operator = null;
+      clearHighlight();
+    }
+
+    // Number()로 불필요한 소수점 제거 후 문자열로 저장
+    prevInput    = String(result);
+    currentInput = String(result);
+    shouldReset  = !chained;
+
+    updateDisplay(currentInput);
+    updateClearButton();
+  }
+
+  // ── 부호 전환 함수 ────────────────────────────────────
+  function toggleSign() {
+    if (currentInput === "0") { return; }
+    var num = parseFloat(currentInput) * -1;
+    currentInput = String(num);
+    updateDisplay(currentInput);
+  }
+
+  // ── 초기화 함수 ───────────────────────────────────────
+  function clearAll() {
+    var clearBtn = document.querySelector("[data-type='clear']");
+
+    // C 상태: 현재 입력만 초기화
+    if (clearBtn.textContent === "C") {
+      currentInput = "0";
+      updateDisplay("0");
+      updateClearButton();
+      return;
+    }
+
+    // AC 상태: 전체 초기화
+    currentInput = "0";
+    prevInput    = "";
+    operator     = null;
+    shouldReset  = false;
+    expressionEl.textContent = "";
+    updateDisplay("0");
+    clearHighlight();
+  }
+
+  // ── 에러 표시 함수 ────────────────────────────────────
+  function showError(msg) {
+    resultEl.classList.add("error");
+    resultEl.textContent = msg;
+    operator     = null;
+    prevInput    = "";
+    currentInput = "0";
+    shouldReset  = true;
+    expressionEl.textContent = "";
+    clearHighlight();
+  }
+
+  // ── 연산자 버튼 하이라이트 함수 ──────────────────────
+  function highlightOperator(op) {
+    clearHighlight();
+    var opButtons = document.querySelectorAll("[data-type='operator']");
+    opButtons.forEach(function(btn) {
+      if (btn.dataset.value === op) {
+        btn.classList.add("active");
+      }
+    });
+  }
+
+  function clearHighlight() {
+    var opButtons = document.querySelectorAll("[data-type='operator']");
+    opButtons.forEach(function(btn) {
+      btn.classList.remove("active");
+    });
+  }
+
+  // ── addEventListener로 버튼 클릭 이벤트 처리 ─────────
+  allButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      // 어떤 버튼이 눌렸는지 data-type으로 확인
+      var type  = button.dataset.type;
+      var value = button.dataset.value;
+
+      if (type === "number") {
+        inputNumber(value);
+      } else if (type === "operator") {
+        inputOperator(value);
+      } else if (type === "equal") {
+        calculate(false);
+      } else if (type === "dot") {
+        inputDot();
+      } else if (type === "sign") {
+        toggleSign();
+      } else if (type === "clear") {
+        clearAll();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
