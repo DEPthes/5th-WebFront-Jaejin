@@ -142,3 +142,4 @@ input.addEventListener('keydown', function (e) {
 
 // ── 초기 실행 ─────────────────────────────────────────────────
 render();
+
