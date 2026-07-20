@@ -1,0 +1,112 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(31, 43, 34, 0.42);
+  backdrop-filter: blur(2px);
+}
+.confirm-modal {
+  position: relative;
+  width: min(370px, 100%);
+  padding: 33px 29px 25px;
+  text-align: center;
+  background: var(--surface);
+  border-radius: 19px;
+  box-shadow: 0 20px 45px rgba(20, 28, 22, 0.22);
+}
+.modal-close {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+}
+.icon-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-faint);
+  background: transparent;
+  border-radius: 50%;
+}
+.icon-button:hover {
+  background: var(--surface-alt);
+}
+.modal-symbol {
+  width: 43px;
+  height: 43px;
+  margin: 0 auto 13px;
+  display: grid;
+  place-items: center;
+  color: var(--expense);
+  background: var(--expense-soft);
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 21px;
+}
+.confirm-modal h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.7px;
+}
+.confirm-modal p {
+  margin: 9px 0 24px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.transaction-modal-backdrop {
+  z-index: 7;
+  overflow-y: auto;
+}
+.transaction-modal {
+  width: min(590px, 100%);
+  padding: 30px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  box-shadow: 0 24px 55px rgba(20, 28, 22, 0.26);
+}
+.transaction-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.transaction-modal-header h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  letter-spacing: -0.8px;
+}
+.bottom-nav {
+  display: none;
+}
+.floating-transaction-add {
+  position: fixed;
+  z-index: 5;
+  right: 45px;
+  bottom: 42px;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  color: var(--surface);
+  background: var(--brand);
+  border-radius: 50%;
+  box-shadow: 0 12px 24px rgba(47, 107, 79, 0.32);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.floating-transaction-add:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(47, 107, 79, 0.4);
+}
